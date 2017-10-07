@@ -48,7 +48,7 @@ typedef struct {
 	int colonne;
 
 	/* par exemple, pour morpion: */
-	//int ligne;
+	int ligne;
 	//int colonne;
 
 } Coup;
@@ -93,18 +93,18 @@ void afficheJeu(Etat * etat) {
 	/* par exemple : */
 	int i,j;
 	printf("   |");
-	for ( j = 0; j < 3; j++)
+	for ( j = 0; j < COLONNES; j++)
 		printf(" %d |", j);
 	printf("\n");
-	printf("----------------");
+	printf("--------------------------------");
 	printf("\n");
 
-	for(i=0; i < 3; i++) {
+	for(i=0; i < LIGNES; i++) {
 		printf(" %d |", i);
-		for ( j = 0; j < 3; j++)
+		for ( j = 0; j < COLONNES; j++)
 			printf(" %c |", etat->plateau[i][j]);
 		printf("\n");
-		printf("----------------");
+		printf("--------------------------------");
 		printf("\n");
 	}
 }

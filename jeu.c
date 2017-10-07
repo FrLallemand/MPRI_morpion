@@ -112,14 +112,16 @@ void afficheJeu(Etat * etat) {
 
 // Nouveau coup
 // TODO: adapter la liste de paramètres au jeu
-Coup * nouveauCoup( int i, int j ) {
+Coup * nouveauCoup( int i ) {
 	Coup * coup = (Coup *)malloc(sizeof(Coup));
 
 	// TODO: à compléter avec la création d'un nouveau coup
+	coup->colonne = i;
 
-	/* par exemple : */
+	/* par exemple :
 	coup->ligne = i;
 	coup->colonne = j;
+	*/
 
 	return coup;
 }
@@ -128,16 +130,36 @@ Coup * nouveauCoup( int i, int j ) {
 Coup * demanderCoup () {
 
 	// TODO...
+	int i;
+	printf("\n quelle colonne ? ") ;
+	scanf("%d",&i);
 
-	/* par exemple : */
+	/* par exemple :
 	int i,j;
 	printf("\n quelle ligne ? ") ;
 	scanf("%d",&i);
 	printf(" quelle colonne ? ") ;
 	scanf("%d",&j);
-
-	return nouveauCoup(i,j);
+	*/
+	return nouveauCoup(i);
 }
+
+
+// Retourne la position (ligne) disponible sur la colonne
+// Retourne -1 si aucune position disponible
+int hautColonne(Etat * etat, int i){
+	/*
+	  Peut être plus efficace de stocker la position
+	  et la modifier à chaque coup joué ?
+	*/
+	int j;
+	j = LIGNES-1;
+	while(etat->plateau[j][i] != ' ' && j>=0){
+		j--;
+	}
+	return j;
+}
+
 
 // Modifier l'état en jouant un coup
 // retourne 0 si le coup n'est pas possible
@@ -146,10 +168,13 @@ int jouerCoup( Etat * etat, Coup * coup ) {
 	// TODO: à compléter
 
 	/* par exemple : */
-	if ( etat->plateau[coup->ligne][coup->colonne] != ' ' )
+	int position = hautColonne(etat, coup->colonne);
+	printf("\n %d", position);
+	if(position <= -1){
 		return 0;
+	}
 	else {
-		etat->plateau[coup->ligne][coup->colonne] = etat->joueur ? 'O' : 'X';
+		etat->plateau[position][coup->colonne] = etat->joueur ? 'O' : 'X';
 
 		// à l'autre joueur de jouer
 		etat->joueur = AUTRE_JOUEUR(etat->joueur);
@@ -173,7 +198,7 @@ Coup ** coups_possibles( Etat * etat ) {
 	for(i=0; i < 3; i++) {
 		for (j=0; j < 3; j++) {
 			if ( etat->plateau[i][j] == ' ' ) {
-				coups[k] = nouveauCoup(i,j);
+				coups[k] = nouveauCoup(j);
 				k++;
 			}
 		}

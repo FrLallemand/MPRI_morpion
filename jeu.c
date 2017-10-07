@@ -15,6 +15,11 @@
 
 #define TEMPS 5		// temps de calcul pour un coup avec MCTS (en secondes)
 
+//Dimensions standards d'un jeu de puissance 4
+#define LIGNES 6
+#define COLONNES 7
+
+
 // macros
 #define AUTRE_JOUEUR(i) (1-(i))
 #define min(a, b)       ((a) < (b) ? (a) : (b))
@@ -29,9 +34,10 @@ typedef struct EtatSt {
 	int joueur; // à qui de jouer ?
 
 	// TODO: à compléter par la définition de l'état du jeu
+	char plateau[LIGNES][COLONNES];
 
 	/* par exemple, pour morpion: */
-	char plateau[3][3];
+	//char plateau[3][3];
 
 } Etat;
 
@@ -39,9 +45,11 @@ typedef struct EtatSt {
 typedef struct {
 	// TODO: à compléter par la définition d'un coup
 
-	/* par exemple, pour morpion: */
-	int ligne;
 	int colonne;
+
+	/* par exemple, pour morpion: */
+	//int ligne;
+	//int colonne;
 
 } Coup;
 
@@ -53,11 +61,9 @@ Etat * copieEtat( Etat * src ) {
 
 
 	// TODO: à compléter avec la copie de l'état src dans etat
-
-	/* par exemple : */
 	int i,j;
-	for (i=0; i< 3; i++)
-		for ( j=0; j<3; j++)
+	for (i=0; i< LIGNES; i++)
+		for ( j=0; j<COLONNES; j++)
 			etat->plateau[i][j] = src->plateau[i][j];
 
 
@@ -71,10 +77,9 @@ Etat * etat_initial( void ) {
 
 	// TODO: à compléter avec la création de l'état initial
 
-	/* par exemple : */
 	int i,j;
-	for (i=0; i< 3; i++)
-		for ( j=0; j<3; j++)
+	for (i=0; i< LIGNES; i++)
+		for ( j=0; j<COLONNES; j++)
 			etat->plateau[i][j] = ' ';
 
 	return etat;

@@ -28,60 +28,53 @@
 // Critères de fin de partie
 typedef enum {NON, MATCHNUL, ORDI_GAGNE, HUMAIN_GAGNE } FinDePartie;
 
+// Valeurs possibles d'une case
+typedef enum {PION_HUM, PION_ORDI, VIDE} Pion;
+
 // Definition du type Etat (état/position du jeu)
 typedef struct EtatSt {
 
-	int joueur; // à qui de jouer ?
+	int joueur; // à qui de jouer ? 
 
-	// TODO: à compléter par la définition de l'état du jeu
-	char plateau[LIGNES][COLONNES];
-
-	/* par exemple, pour morpion: */
-	//char plateau[3][3];
+	// Un jeu de puissance 4 est composé de 7 colonnes de 6 cases de hauteurs
+	Pion plateau[LIGNES][COLONNES];
 
 } Etat;
 
 // Definition du type Coup
 typedef struct {
-	// TODO: à compléter par la définition d'un coup
-
+	// Un coup au puissance 4 n'est défini que par une colonne dans laquelle on veut glisser un pion
 	int colonne;
-
-	/* par exemple, pour morpion: */
-	int ligne;
-	//int colonne;
 
 } Coup;
 
-// Copier un état
+// Copier un état 
 Etat * copieEtat( Etat * src ) {
 	Etat * etat = (Etat *)malloc(sizeof(Etat));
 
 	etat->joueur = src->joueur;
-
-
-	// TODO: à compléter avec la copie de l'état src dans etat
-	int i,j;
-	for (i=0; i< LIGNES; i++)
-		for ( j=0; j<COLONNES; j++)
+	
+	/* Copie d'un état de puissance 4 */
+	int i,j;	
+	for (i=0; i < LIGNES; i++)
+		for ( j=0; j < COLONNES; j++)
 			etat->plateau[i][j] = src->plateau[i][j];
+	
 
-
-
+	
 	return etat;
 }
 
-// Etat initial
+// Etat initial 
 Etat * etat_initial( void ) {
 	Etat * etat = (Etat *)malloc(sizeof(Etat));
-
-	// TODO: à compléter avec la création de l'état initial
-
-	int i,j;
-	for (i=0; i< LIGNES; i++)
-		for ( j=0; j<COLONNES; j++)
-			etat->plateau[i][j] = ' ';
-
+	
+	// Initialisation du plateau de puissance 4
+	int i,j;	
+	for (i=0; i < LIGNES; i++)
+		for ( j=0; j < COLONNES; j++)
+			etat->plateau[i][j] = VIDE;
+	
 	return etat;
 }
 
@@ -93,18 +86,30 @@ void afficheJeu(Etat * etat) {
 	/* par exemple : */
 	int i,j;
 	printf("   |");
-	for ( j = 0; j < COLONNES; j++)
+	for ( j = 0; j < COLONNES; j++) 
 		printf(" %d |", j);
 	printf("\n");
-	printf("--------------------------------");
+	printf("----------------");
 	printf("\n");
-
+	
 	for(i=0; i < LIGNES; i++) {
 		printf(" %d |", i);
-		for ( j = 0; j < COLONNES; j++)
-			printf(" %c |", etat->plateau[i][j]);
+		for ( j = 0; j < COLONNES; j++){ 
+			//printf(" %c |", etat->plateau[i][j]);
+			switch(etat->plateau[i][j]){
+				case VIDE:
+					printf("   |");
+					break;
+				case PION_ORDI:
+					printf(" O |");
+					break;
+				case PION_HUM:
+					printf(" H |");
+					break;
+			}
+		}
 		printf("\n");
-		printf("--------------------------------");
+		printf("----------------");
 		printf("\n");
 	}
 }
@@ -392,49 +397,65 @@ void ordijoue_mcts(Etat * etat, int tempsmax) {
 	free (coups);
 }
 
-int main(void) {
-
-	Coup * coup;
-	FinDePartie fin;
-
-	// initialisation
+// Fonction de test, retourne 1 si le test d'une fonction échoue
+// N'est pas une fonction de test unitaire au sens strict du termes
+// puisque certains tests consiste en un affichage dont il faut
+// vérifier la consistance
+int test(){
+	// Test de l'initialisation
 	Etat * etat = etat_initial();
+	afficheJeu(etat);
+	
+	return 0;
+}
 
-	// Choisir qui commence :
-	printf("Qui commence (0 : humain, 1 : ordinateur) ? ");
-	scanf("%d", &(etat->joueur) );
+int main(int argc, char *argv[]) {
+	if(argc == 1){
+		Coup * coup;
+		FinDePartie fin;
+		
+		// initialisation
+		Etat * etat = etat_initial(); 
+		
+		// Choisir qui commence : 
+		printf("Qui commence (0 : humain, 1 : ordinateur) ? ");
+		scanf("%d", &(etat->joueur) );
+		
+		// boucle de jeu
+		do {
+			printf("\n");
+			afficheJeu(etat);
+			
+			if ( etat->joueur == 0 ) {
+				// tour de l'humain
+				
+				do {
+					coup = demanderCoup();
+				} while ( !jouerCoup(etat, coup) );
+										
+			}
+			else {
+				// tour de l'Ordinateur
+				
+				ordijoue_mcts( etat, TEMPS );
+				
+			}
+			
+			fin = testFin( etat );
+		}	while ( fin == NON ) ;
 
-	// boucle de jeu
-	do {
 		printf("\n");
 		afficheJeu(etat);
-
-		if ( etat->joueur == 0 ) {
-			// tour de l'humain
-
-			do {
-				coup = demanderCoup();
-			} while ( !jouerCoup(etat, coup) );
-
-		}
-		else {
-			// tour de l'Ordinateur
-
-			ordijoue_mcts( etat, TEMPS );
-
-		}
-
-		fin = testFin( etat );
-	}	while ( fin == NON ) ;
-
-	printf("\n");
-	afficheJeu(etat);
-
-	if ( fin == ORDI_GAGNE )
-		printf( "** L'ordinateur a gagné **\n");
-	else if ( fin == MATCHNUL )
-		printf(" Match nul !  \n");
-	else
-		printf( "** BRAVO, l'ordinateur a perdu  **\n");
-	return 0;
+			
+		if ( fin == ORDI_GAGNE )
+			printf( "** L'ordinateur a gagné **\n");
+		else if ( fin == MATCHNUL )
+			printf(" Match nul !  \n");
+		else
+			printf( "** BRAVO, l'ordinateur a perdu  **\n");
+		return 0;
+	}
+	else if (strcmp("test", argv[1]) == 0){
+		return test();
+	}
 }

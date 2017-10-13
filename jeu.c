@@ -81,9 +81,6 @@ Etat * etat_initial( void ) {
 
 
 void afficheJeu(Etat * etat) {
-
-	// TODO: à compléter
-
 	/* par exemple : */
 	int i,j;
 
@@ -126,13 +123,8 @@ void afficheJeu(Etat * etat) {
 Coup * nouveauCoup( int i ) {
 	Coup * coup = (Coup *)malloc(sizeof(Coup));
 
-	// TODO: à compléter avec la création d'un nouveau coup
+	// colonne sur lequelle le pion sera ajouté
 	coup->colonne = i;
-
-	/* par exemple :
-	coup->ligne = i;
-	coup->colonne = j;
-	*/
 
 	return coup;
 }
@@ -140,18 +132,11 @@ Coup * nouveauCoup( int i ) {
 // Demander à l'humain quel coup jouer
 Coup * demanderCoup () {
 
-	// TODO...
+	// On demande dans quelle colonne le joueur souhaite mettre un pion
 	int i;
 	printf("\n quelle colonne ? ") ;
 	scanf("%d",&i);
 
-	/* par exemple :
-	int i,j;
-	printf("\n quelle ligne ? ") ;
-	scanf("%d",&i);
-	printf(" quelle colonne ? ") ;
-	scanf("%d",&j);
-	*/
 	return nouveauCoup(i);
 }
 
@@ -160,12 +145,12 @@ Coup * demanderCoup () {
 // Retourne -1 si aucune position disponible
 int hautColonne(Etat * etat, int i){
 	/*
-	  Peut être plus efficace de stocker la position
+	  TODO Peut être plus efficace de stocker la position
 	  et la modifier à chaque coup joué ?
 	*/
 	int j;
 	j = LIGNES-1;
-	while(etat->plateau[j][i] != ' ' && j>=0){
+	while(etat->plateau[j][i] != VIDE && j>=0){
 		j--;
 	}
 	return j;
@@ -180,12 +165,11 @@ int jouerCoup( Etat * etat, Coup * coup ) {
 
 	/* par exemple : */
 	int position = hautColonne(etat, coup->colonne);
-	printf("\n %d", position);
 	if(position <= -1){
 		return 0;
 	}
 	else {
-		etat->plateau[position][coup->colonne] = etat->joueur ? 'O' : 'X';
+		etat->plateau[position][coup->colonne] = etat->joueur ? PION_ORDI : PION_HUM;
 
 		// à l'autre joueur de jouer
 		etat->joueur = AUTRE_JOUEUR(etat->joueur);
@@ -409,7 +393,20 @@ void ordijoue_mcts(Etat * etat, int tempsmax) {
 // vérifier la consistance
 int test(){
 	// Test de l'initialisation
+	printf("On initialise le plateau de jeu :\n");
 	Etat * etat = etat_initial();
+	afficheJeu(etat);
+
+	// Test d'un coup humain
+	printf("On joue un coup en tant qu'humain dans la troisième colonne:\n");
+	Coup * coup = nouveauCoup(3);
+	jouerCoup(etat, coup);
+	afficheJeu(etat);
+
+	// Test d'un coup ordi
+	printf("On joue un coup en tant qu'ordi dans la troisième colonne:\n");
+	coup = nouveauCoup(3);
+	jouerCoup(etat, coup);
 	afficheJeu(etat);
 	
 	return 0;

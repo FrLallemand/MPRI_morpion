@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <string.h>
 
 // Paramètres du jeu
 #define LARGEUR_MAX 9 		// nb max de fils pour un noeud (= nb max de coups possibles)
@@ -85,12 +86,16 @@ void afficheJeu(Etat * etat) {
 
 	/* par exemple : */
 	int i,j;
+
 	printf("   |");
-	for ( j = 0; j < COLONNES; j++) 
+	for ( j = 0; j < COLONNES; j++)
 		printf(" %d |", j);
 	printf("\n");
-	printf("----------------");
-	printf("\n");
+
+	printf("   ");
+	for(j = 0; j < COLONNES; j++)
+		printf("----");
+	printf("-\n");
 	
 	for(i=0; i < LIGNES; i++) {
 		printf(" %d |", i);
@@ -108,9 +113,10 @@ void afficheJeu(Etat * etat) {
 					break;
 			}
 		}
-		printf("\n");
-		printf("----------------");
-		printf("\n");
+		printf("\n   ");
+		for(j = 0; j < COLONNES; j++)
+			printf("----");
+		printf("-\n");
 	}
 }
 

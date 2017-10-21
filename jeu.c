@@ -286,48 +286,64 @@ FinDePartie testFin( Etat * etat ) {
 
 	// tester si un joueur a gagné
 	int i,j,k,n = 0;
-	for ( i=0;i < 3; i++) {
-		for(j=0; j < 3; j++) {
+	for ( i=0;i < LIGNES ; i++) {
+		for(j=0; j < COLONNES; j++) {
 			if ( etat->plateau[i][j] != ' ') {
 				n++;	// nb coups joués
 
 				// lignes
 				k=0;
-				while ( k < 3 && i+k < 3 && etat->plateau[i+k][j] == etat->plateau[i][j] )
+				while ( k < 4 && i+k < 4 && etat->plateau[i+k][j] == etat->plateau[i][j] )
 					k++;
-				if ( k == 3 )
+				if ( k == 4 )
 					return etat->plateau[i][j] == 'O'? ORDI_GAGNE : HUMAIN_GAGNE;
 
 				// colonnes
 				k=0;
-				while ( k < 3 && j+k < 3 && etat->plateau[i][j+k] == etat->plateau[i][j] )
+				while ( k < 4 && j+k < 4 && etat->plateau[i][j+k] == etat->plateau[i][j] )
 					k++;
-				if ( k == 3 )
+				if ( k == 4 )
 					return etat->plateau[i][j] == 'O'? ORDI_GAGNE : HUMAIN_GAGNE;
 
 				// diagonales
 				k=0;
-				while ( k < 3 && i+k < 3 && j+k < 3 && etat->plateau[i+k][j+k] == etat->plateau[i][j] )
+				while ( k < 4 && i+k < 4 && j+k < 4 && etat->plateau[i+k][j+k] == etat->plateau[i][j] )
 					k++;
-				if ( k == 3 )
+				if ( k == 4 )
 					return etat->plateau[i][j] == 'O'? ORDI_GAGNE : HUMAIN_GAGNE;
 
 				k=0;
-				while ( k < 3 && i+k < 3 && j-k >= 0 && etat->plateau[i+k][j-k] == etat->plateau[i][j] )
+				while ( k < 4 && i+k < 4 && j-k >= 0 && etat->plateau[i+k][j-k] == etat->plateau[i][j] )
 					k++;
-				if ( k == 3 )
+				if ( k == 4 )
 					return etat->plateau[i][j] == 'O'? ORDI_GAGNE : HUMAIN_GAGNE;
 			}
 		}
 	}
 
 	// et sinon tester le match nul
-	if ( n == 3*3 )
+	if ( n == LIGNES*COLONNES )
 		return MATCHNUL;
 
 	return NON;
 }
 
+
+Noeud * selectionnerNoeudUCT(Noeud * racine){
+  //TODO selection du noeud pour le MCTS-UCT
+}
+
+Noeud * developperFils(Noeud * racine){
+  //TODO developpement d'un fils pour le MCTS-UCT
+}
+
+FinDePartie * simulerFinPartie(Noeud * racine){
+  //TODO simulation de fin de partie pour le MCTS-UCT
+}
+
+void mettreAJourBValeurs(Noeud * racine, FinDePartie resultat){
+  //TODO mettre à jour les B valeurs de tous les noeuds sur le chemin de la racine au noeud terminal, en remontant le résultat de la position finale
+}
 
 
 // Calcule et joue un coup de l'ordinateur avec MCTS-UCT

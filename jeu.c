@@ -191,14 +191,11 @@ Coup ** coups_possibles( Etat * etat ) {
 
     int k = 0;
 
-    // TODO: à compléter
-
-    /* par exemple */
-    int i,j;
-    for(i=0; i < LIGNES; i++) {
-        for (j=0; j < COLONNES; j++) {
-            if ( etat->plateau[i][j] == ' ' ) {
-                coups[k] = nouveauCoup(j);
+    // Au puissance 4, on a un coup par colonne
+    int i;
+    for(i=0; i < COLONNES; i++) {
+        if ( hautColonne(etat, i) > -1) {
+                coups[k] = nouveauCoup(i);
                 k++;
             }
         }

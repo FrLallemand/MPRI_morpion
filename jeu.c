@@ -349,7 +349,24 @@ double calculerBValeur(Noeud * noeud){
 }
 
 Noeud * selectionnerNoeudUCT(Noeud * racine){
-    //TODO selection du noeud pour le MCTS-UCT
+
+    //    noeud terminal      OU    tous les enfants ne sont pas dvlp        
+    if(testFin(racine->etat) != NON || racine->nb_simus < racine->nb_enfants){
+        return racine;
+    }
+
+    int i = 0;
+    Noeud noeudBValeurMax = racine->enfants[i];
+    double bValeurMax = calculerBValeur(noeudBValeurMax);
+    for(int i=1; i<racine->nb_enfants; i++){
+        double bValeurCompare = calculerBValeur(racine->enfants[i]);
+        if(bValeurMax < bValeurCompare){
+            noeudBValeurMax = racine->enfants[i]
+            bValeurMax = bValeurCompare;
+        }
+    }
+
+    return selectionnerNoeudUCT(noeudBValeurMax);
 }
 
 Noeud * developperFils(Noeud * racine){

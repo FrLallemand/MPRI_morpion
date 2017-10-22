@@ -72,7 +72,9 @@ Etat * copieEtat( Etat * src ) {
 // Etat initial 
 Etat * etat_initial( void ) {
     Etat * etat = (Etat *)malloc(sizeof(Etat));
-	
+
+    etat->joueur = 0;
+    
     // Initialisation du plateau de puissance 4
     int i,j;	
     for (i=0; i < LIGNES; i++)
@@ -193,8 +195,8 @@ Coup ** coups_possibles( Etat * etat ) {
 
     /* par exemple */
     int i,j;
-    for(i=0; i < 3; i++) {
-        for (j=0; j < 3; j++) {
+    for(i=0; i < LIGNES; i++) {
+        for (j=0; j < COLONNES; j++) {
             if ( etat->plateau[i][j] == ' ' ) {
                 coups[k] = nouveauCoup(j);
                 k++;
@@ -250,6 +252,7 @@ Noeud * nouveauNoeud (Noeud * parent, Coup * coup ) {
     // POUR MCTS:
     noeud->nb_victoires = 0;
     noeud->nb_simus = 0;
+    noeud->somme_recompense = 0;
 
 
     return noeud;

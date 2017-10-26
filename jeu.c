@@ -222,6 +222,17 @@ int nb_coups_possibles( Etat * etat ) {
     return k;
 }
 
+// Compare deux coups. (vérification basée sur le numéro de colonne, cf règles du puissance 4)
+// Retour :
+// 1 si identiques
+// 0 si différents
+int coups_egaux(Coup * coup1, Coup * coup2){
+	if(coup1->colonne == coup2->colonne){
+		return 1;
+	}
+	return 0;
+}
+
 
 // Definition du type Noeud
 typedef struct NoeudSt {
@@ -296,41 +307,36 @@ void freeNoeud ( Noeud * noeud) {
 // Test si l'état est un état terminal
 // et retourne NON, MATCHNUL, ORDI_GAGNE ou HUMAIN_GAGNE
 FinDePartie testFin( Etat * etat ) {
-
-    // TODO...
-
-    /* par exemple	*/
-
     // tester si un joueur a gagné
     int i,j,k,n = 0;
     for ( i=0;i < LIGNES ; i++) {
         for(j=0; j < COLONNES; j++) {
-            if ( etat->plateau[i][j] != ' ') {
+            if ( etat->plateau[i][j] != VIDE) {
                 n++;	// nb coups joués
 
-                // lignes
+                // Vérifie sur la colonne
                 k=0;
-                while ( k < 4 && i+k < 4 && etat->plateau[i+k][j] == etat->plateau[i][j] )
-                    k++;
+                while ( k < 4 && i+k < COLONNES && etat->plateau[i+k][j] == etat->plateau[i][j] )
+					k++;
                 if ( k == 4 )
-                    return etat->plateau[i][j] == 'O'? ORDI_GAGNE : HUMAIN_GAGNE;
+					return etat->plateau[i][j] == 'O'? ORDI_GAGNE : HUMAIN_GAGNE;
 
-                // colonnes
+                // Vérifie sur la ligne
                 k=0;
-                while ( k < 4 && j+k < 4 && etat->plateau[i][j+k] == etat->plateau[i][j] )
+                while ( k < 4 && j+k < LIGNES && etat->plateau[i][j+k] == etat->plateau[i][j] )
                     k++;
                 if ( k == 4 )
                     return etat->plateau[i][j] == 'O'? ORDI_GAGNE : HUMAIN_GAGNE;
 
                 // diagonales
                 k=0;
-                while ( k < 4 && i+k < 4 && j+k < 4 && etat->plateau[i+k][j+k] == etat->plateau[i][j] )
+                while ( k < 4 && i+k < COLONNES && j+k < LIGNES && etat->plateau[i+k][j+k] == etat->plateau[i][j] )
                     k++;
                 if ( k == 4 )
                     return etat->plateau[i][j] == 'O'? ORDI_GAGNE : HUMAIN_GAGNE;
 
                 k=0;
-                while ( k < 4 && i+k < 4 && j-k >= 0 && etat->plateau[i+k][j-k] == etat->plateau[i][j] )
+                while ( k < 4 && i+k < COLONNES && j-k >= 0 && etat->plateau[i+k][j-k] == etat->plateau[i][j] )
                     k++;
                 if ( k == 4 )
                     return etat->plateau[i][j] == 'O'? ORDI_GAGNE : HUMAIN_GAGNE;
@@ -340,7 +346,7 @@ FinDePartie testFin( Etat * etat ) {
 
     // et sinon tester le match nul
     if ( n == LIGNES*COLONNES )
-        return ORDI_GAGNE;
+        return MATCHNUL;
 
     return NON;
 }
@@ -392,7 +398,38 @@ Noeud * developperFils(Noeud * noeud){
 
 	// On récupère la liste des coups possibles
 	Coup ** coups = coups_possibles(noeud->etat);
-    //TODO developpement d'un fils pour le MCTS-UCT
+	Coup ** coupsNonDeveloppes = (Coup **) malloc((1+LARGEUR_MAX) * sizeof(Coup *) );
+
+	// On filtre les coups déjàs développés
+	//TODO n'utiliser qu'un seul tableau en décalant les indices
+	int k, indiceCoupsNonDeveloppes;
+	k = 0;
+	indiceCoupsNonDeveloppes = 0;
+	while(coups != NULL){
+		for(int i=1; i<noeud->nb_enfants; i++){
+			if(!coups_egaux(coups[k], noeud->enfants[i]->coup)){
+				coupsNonDeveloppes[indiceCoupsNonDeveloppes] = coups[k];
+				indiceCoupsNonDeveloppes++;
+			}
+		}
+		k++;
+	}
+
+	int choix = rand() % indiceCoupsNonDeveloppes;
+	//liberer les listes de coups, mais conserver celui choisi
+	k = 0;
+    while (coups[k] != NULL && coupsNonDeveloppes[k] != NULL){
+        if (k != choix){
+            free(coups[k]);
+			free(coupsNonDeveloppes[k]);
+		}
+        k++;
+	}
+	// On choisit et développe un fils au hasard dans ceux non développés
+	Noeud * enfant = ajouterEnfant(noeud, coupsNonDeveloppes[choix]);
+
+	return enfant;
+	//TODO developpement d'un fils pour le MCTS-UCT
 }
 
 FinDePartie * simulerFinPartie(Noeud * racine){
@@ -478,9 +515,38 @@ int test(){
 
     // Test d'un coup ordi
     printf("On joue un coup en tant qu'ordi dans la troisième colonne:\n");
-    coup = nouveauCoup(3);
-    jouerCoup(etat, coup);
-    afficheJeu(etat);
+	coup = nouveauCoup(2);
+	jouerCoup(etat, coup);
+	coup = nouveauCoup(2);
+	jouerCoup(etat, coup);
+	coup = nouveauCoup(1);
+	jouerCoup(etat, coup);
+	coup = nouveauCoup(0);
+	jouerCoup(etat, coup);
+	coup = nouveauCoup(1);
+	jouerCoup(etat, coup);
+	coup = nouveauCoup(1);
+	jouerCoup(etat, coup);
+	coup = nouveauCoup(0);
+	jouerCoup(etat, coup);
+	coup = nouveauCoup(0);
+	jouerCoup(etat, coup);
+	coup = nouveauCoup(6);
+	jouerCoup(etat, coup);
+	coup = nouveauCoup(0);
+	jouerCoup(etat, coup);
+
+	afficheJeu(etat);
+
+	FinDePartie fin = testFin( etat );
+	if ( fin == ORDI_GAGNE )
+		printf( "** L'ordinateur a gagné **\n");
+	else if ( fin == MATCHNUL )
+		printf(" Match nul !  \n");
+	else if ( fin == HUMAIN_GAGNE )
+		printf( "** BRAVO, l'ordinateur a perdu  **\n");
+	else
+		printf(" Partie non finie !  \n");
 
     return 0;
 }

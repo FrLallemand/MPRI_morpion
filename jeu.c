@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-#include <string.h>w
+#include <string.h>
 #include <float.h>
 
 // Paramètres du jeu
@@ -207,6 +207,22 @@ Coup ** coups_possibles( Etat * etat ) {
 }
 
 
+// Retourne la taille de la liste de coups possibles à partir d'un etat
+int nb_coups_possibles( Etat * etat ) {
+    int k = 0;
+
+    // Au puissance 4, on a un coup par colonne
+    int i;
+    for(i=0; i < COLONNES; i++) {
+        if ( hautColonne(etat, i) > -1) {
+			k++;
+		}
+	}
+
+    return k;
+}
+
+
 // Definition du type Noeud
 typedef struct NoeudSt {
 
@@ -222,7 +238,6 @@ typedef struct NoeudSt {
     // POUR MCTS:
     int nb_victoires;
     int nb_simus;
-    int nb_coups_possibles;
     int somme_recompense;
 } Noeud;
 
@@ -250,7 +265,6 @@ Noeud * nouveauNoeud (Noeud * parent, Coup * coup ) {
     noeud->nb_victoires = 0;
     noeud->nb_simus = 0;
     noeud->somme_recompense = 0;
-	noeud->nb_coups_possibles = 0;
 
     return noeud;
 }
@@ -326,7 +340,7 @@ FinDePartie testFin( Etat * etat ) {
 
     // et sinon tester le match nul
     if ( n == LIGNES*COLONNES )
-        return MATCHNUL;
+        return ORDI_GAGNE;
 
     return NON;
 }
@@ -351,7 +365,7 @@ double calculerBValeur(Noeud * noeud){
 Noeud * selectionnerNoeudUCT(Noeud * racine){
 
     //    noeud terminal      OU    tous les enfants ne sont pas dvlp
-    if(testFin(racine->etat) != NON || racine->nb_enfants < racine->nb_coups_possibles){
+    if(testFin(racine->etat) != NON || racine->nb_enfants < nb_coups_possibles(racine->etat)){
         return racine;
     }
 
@@ -369,7 +383,15 @@ Noeud * selectionnerNoeudUCT(Noeud * racine){
     return selectionnerNoeudUCT(noeudBValeurMax);
 }
 
-Noeud * developperFils(Noeud * racine){
+Noeud * developperFils(Noeud * noeud){
+	// si on est sur un etat final, pas la peine de développer
+	// TODO peut être le garder en mémoire dans la structure d'un noeud ?
+	if(testFin(noeud->etat) != NON){
+		return noeud;
+	}
+
+	// On récupère la liste des coups possibles
+	Coup ** coups = coups_possibles(noeud->etat);
     //TODO developpement d'un fils pour le MCTS-UCT
 }
 
@@ -405,8 +427,6 @@ void ordijoue_mcts(Etat * etat, int tempsmax) {
         enfant = ajouterEnfant(racine, coups[k]);
         k++;
     }
-	racine->nb_coups_possibles = k;
-
 
     meilleur_coup = coups[ rand()%k ]; // choix aléatoire
 

@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-#include <string.h>
+#include <string.h>w
 #include <float.h>
 
 // Paramètres du jeu
@@ -37,9 +37,9 @@ typedef enum {PION_HUM, PION_ORDI, VIDE} Pion;
 
 // Definition du type Etat (état/position du jeu)
 typedef struct EtatSt {
-  
-    int joueur; // à qui de jouer ? 
-  
+
+    int joueur; // à qui de jouer ?
+
     // Un jeu de puissance 4 est composé de 7 colonnes de 6 cases de hauteurs
     Pion plateau[LIGNES][COLONNES];
 
@@ -52,35 +52,35 @@ typedef struct {
 
 } Coup;
 
-// Copier un état 
+// Copier un état
 Etat * copieEtat( Etat * src ) {
     Etat * etat = (Etat *)malloc(sizeof(Etat));
 
     etat->joueur = src->joueur;
-	
+
     /* Copie d'un état de puissance 4 */
-    int i,j;	
+    int i,j;
     for (i=0; i < LIGNES; i++)
         for ( j=0; j < COLONNES; j++)
             etat->plateau[i][j] = src->plateau[i][j];
-	
 
-	
+
+
     return etat;
 }
 
-// Etat initial 
+// Etat initial
 Etat * etat_initial( void ) {
     Etat * etat = (Etat *)malloc(sizeof(Etat));
 
     etat->joueur = 0;
-    
+
     // Initialisation du plateau de puissance 4
-    int i,j;	
+    int i,j;
     for (i=0; i < LIGNES; i++)
         for ( j=0; j < COLONNES; j++)
             etat->plateau[i][j] = VIDE;
-	
+
     return etat;
 }
 
@@ -98,10 +98,10 @@ void afficheJeu(Etat * etat) {
     for(j = 0; j < COLONNES; j++)
         printf("----");
     printf("-\n");
-	
+
     for(i=0; i < LIGNES; i++) {
         printf(" %d |", i);
-        for ( j = 0; j < COLONNES; j++){ 
+        for ( j = 0; j < COLONNES; j++){
             //printf(" %c |", etat->plateau[i][j]);
             switch(etat->plateau[i][j]){
             case VIDE:
@@ -195,11 +195,10 @@ Coup ** coups_possibles( Etat * etat ) {
     int i;
     for(i=0; i < COLONNES; i++) {
         if ( hautColonne(etat, i) > -1) {
-                coups[k] = nouveauCoup(i);
-                k++;
-            }
-        }
-    }
+			coups[k] = nouveauCoup(i);
+			k++;
+		}
+	}
     /* fin de l'exemple */
 
     coups[k] = NULL;
@@ -223,6 +222,7 @@ typedef struct NoeudSt {
     // POUR MCTS:
     int nb_victoires;
     int nb_simus;
+    int nb_coups_possibles;
     int somme_recompense;
 } Noeud;
 
@@ -250,7 +250,7 @@ Noeud * nouveauNoeud (Noeud * parent, Coup * coup ) {
     noeud->nb_victoires = 0;
     noeud->nb_simus = 0;
     noeud->somme_recompense = 0;
-
+	noeud->nb_coups_possibles = 0;
 
     return noeud;
 }
@@ -333,7 +333,7 @@ FinDePartie testFin( Etat * etat ) {
 
 double calculerBValeur(Noeud * noeud){
     if(noeud->nb_simus == 0){
-        // le noeud n'a aucune simulation, il est au max
+        // le noeud n'a aucune simulation, il est au max (éviter la division par 0)
         return DBL_MAX;
     }
 
@@ -342,27 +342,27 @@ double calculerBValeur(Noeud * noeud){
 
     // si le joueur du parent est 0 (humain), c'est un min ?
     if(noeud->parent->joueur == 0){
-        moyenneRecompense *= -1
-    }
-    
+        moyenneRecompense *= -1;
+	}
+
     return moyenneRecompense + C * sqrt(log(noeud->parent->nb_simus) / noeud->nb_simus);
 }
 
 Noeud * selectionnerNoeudUCT(Noeud * racine){
 
-    //    noeud terminal      OU    tous les enfants ne sont pas dvlp        
-    if(testFin(racine->etat) != NON || racine->nb_simus < racine->nb_enfants){
+    //    noeud terminal      OU    tous les enfants ne sont pas dvlp
+    if(testFin(racine->etat) != NON || racine->nb_enfants < racine->nb_coups_possibles){
         return racine;
     }
 
     int i = 0;
-    Noeud noeudBValeurMax = racine->enfants[i];
+    Noeud * noeudBValeurMax = racine->enfants[i];
     double bValeurMax = calculerBValeur(noeudBValeurMax);
     for(int i=1; i<racine->nb_enfants; i++){
         double bValeurCompare = calculerBValeur(racine->enfants[i]);
         if(bValeurMax < bValeurCompare){
-            noeudBValeurMax = racine->enfants[i]
-            bValeurMax = bValeurCompare;
+            noeudBValeurMax = racine->enfants[i];
+			bValeurMax = bValeurCompare;
         }
     }
 
@@ -405,6 +405,7 @@ void ordijoue_mcts(Etat * etat, int tempsmax) {
         enfant = ajouterEnfant(racine, coups[k]);
         k++;
     }
+	racine->nb_coups_possibles = k;
 
 
     meilleur_coup = coups[ rand()%k ]; // choix aléatoire
@@ -460,7 +461,7 @@ int test(){
     coup = nouveauCoup(3);
     jouerCoup(etat, coup);
     afficheJeu(etat);
-	
+
     return 0;
 }
 
@@ -468,40 +469,40 @@ int main(int argc, char *argv[]) {
     if(argc == 1){
         Coup * coup;
         FinDePartie fin;
-		
+
         // initialisation
-        Etat * etat = etat_initial(); 
-		
-        // Choisir qui commence : 
+        Etat * etat = etat_initial();
+
+        // Choisir qui commence :
         printf("Qui commence (0 : humain, 1 : ordinateur) ? ");
         scanf("%d", &(etat->joueur) );
-		
+
         // boucle de jeu
         do {
             printf("\n");
             afficheJeu(etat);
-			
+
             if ( etat->joueur == 0 ) {
                 // tour de l'humain
-				
+
                 do {
                     coup = demanderCoup();
                 } while ( !jouerCoup(etat, coup) );
-										
+
             }
             else {
                 // tour de l'Ordinateur
-				
+
                 ordijoue_mcts( etat, TEMPS );
-				
+
             }
-			
+
             fin = testFin( etat );
         }	while ( fin == NON ) ;
 
         printf("\n");
         afficheJeu(etat);
-			
+
         if ( fin == ORDI_GAGNE )
             printf( "** L'ordinateur a gagné **\n");
         else if ( fin == MATCHNUL )

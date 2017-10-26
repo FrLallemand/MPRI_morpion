@@ -9,7 +9,7 @@ default: $(EXEC)
 	$(CC) -o $@ -c $< $(FLAGS)
 
 jeu: $(OBJECTS)
-	$(CC) $(OBJECTS) -o $@
+	$(CC) $(OBJECTS) -o $@ $(FLAGS)
 
 
 run: $(EXEC)

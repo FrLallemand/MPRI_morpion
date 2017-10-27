@@ -21,6 +21,10 @@
 #define LIGNES 6
 #define COLONNES 7
 
+//Récompenses en fonction du vainqueur (voir sujet)
+#define RECOMPENSE_ORDI_VAINQUEUR 1
+#define RECOMPENSE_HUMAIN_VAINQUEUR 0
+#define RECOMPENSE_MATCH_NUL 0.5
 //Approximation de la valeur de √2
 #define C 1,4142
 
@@ -401,7 +405,7 @@ Noeud * developperFils(Noeud * noeud){
 	Coup ** coupsNonDeveloppes = (Coup **) malloc((1+LARGEUR_MAX) * sizeof(Coup *) );
 
 	// On filtre les coups déjàs développés
-	//TODO n'utiliser qu'un seul tableau en décalant les indices
+	//TODO n'utiliser qu'un seul tableau en décalant les indices, ou autre amélioration
 	int k, indiceCoupsNonDeveloppes;
 	k = 0;
 	indiceCoupsNonDeveloppes = 0;
@@ -429,14 +433,35 @@ Noeud * developperFils(Noeud * noeud){
 	Noeud * enfant = ajouterEnfant(noeud, coupsNonDeveloppes[choix]);
 
 	return enfant;
-	//TODO developpement d'un fils pour le MCTS-UCT
 }
 
-FinDePartie * simulerFinPartie(Noeud * racine){
-    //TODO simulation de fin de partie pour le MCTS-UCT
+FinDePartie simulerFinPartie(Etat * etat){
+	FinDePartie resultat;
+	resultat = testFin(etat);
+	while(resultat == NON){
+		Coup ** coups = coups_possibles(etat);
+		jouerCoup(etat, coups[rand() % nb_coups_possibles(etat)]);
+
+		resultat = testFin(etat);
+		free(coups);
+	}
+	return resultat;
 }
 
 void mettreAJourBValeurs(Noeud * racine, FinDePartie resultat){
+	while(racine != NULL){
+		racine->nb_simus ++;
+
+		if ( resultat == ORDI_GAGNE ){
+			racine->nb_victoires ++;
+			racine->somme_recompense += RECOMPENSE_ORDI_VAINQUEUR;
+		}
+		else if ( resultat == MATCHNUL )
+			racine->somme_recompense += RECOMPENSE_MATCH_NUL;
+		else if ( resultat == HUMAIN_GAGNE )
+			racine->somme_recompense += RECOMPENSE_HUMAIN_VAINQUEUR;
+		racine = racine->parent;
+	}
     //TODO mettre à jour les B valeurs de tous les noeuds sur le chemin de la racine au noeud terminal, en remontant le résultat de la position finale
 }
 

@@ -438,14 +438,16 @@ Noeud * developperFils(Noeud * noeud){
 FinDePartie simulerFinPartie(Etat * etat){
 	FinDePartie resultat;
 	resultat = testFin(etat);
-	while(resultat == NON){
-		Coup ** coups = coups_possibles(etat);
-		jouerCoup(etat, coups[rand() % nb_coups_possibles(etat)]);
-
-		resultat = testFin(etat);
-		free(coups);
+	if(resultat != NON){
+		return resultat;
 	}
-	return resultat;
+	Coup ** coups = coups_possibles(etat);
+	jouerCoup(etat, coups[rand() % nb_coups_possibles(etat)]);
+
+	free(coups);
+
+	return simulerFinPartie(etat);
+
 }
 
 void mettreAJourBValeurs(Noeud * racine, FinDePartie resultat){

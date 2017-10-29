@@ -20,30 +20,25 @@ int test(){
     afficheJeu(etat);
 
     // Test d'un coup humain
-    printf("On joue un coup en tant qu'humain dans la troisième colonne:\n");
-    Coup * coup = nouveauCoup(3);
-    jouerCoup(etat, coup);
     afficheJeu(etat);
 
     // Test d'un coup ordi
     printf("On joue un coup en tant qu'ordi dans la troisième colonne:\n");
-	coup = nouveauCoup(2);
+	Coup * coup = nouveauCoup(0);
 	jouerCoup(etat, coup);
-	coup = nouveauCoup(2);
-	jouerCoup(etat, coup);
-	coup = nouveauCoup(1);
+	coup = nouveauCoup(5);
 	jouerCoup(etat, coup);
 	coup = nouveauCoup(0);
 	jouerCoup(etat, coup);
-	coup = nouveauCoup(1);
+	coup = nouveauCoup(4);
 	jouerCoup(etat, coup);
 	coup = nouveauCoup(1);
-	jouerCoup(etat, coup);
-	coup = nouveauCoup(0);
-	jouerCoup(etat, coup);
-	coup = nouveauCoup(0);
 	jouerCoup(etat, coup);
 	coup = nouveauCoup(6);
+	jouerCoup(etat, coup);
+	coup = nouveauCoup(1);
+	jouerCoup(etat, coup);
+	coup = nouveauCoup(5);
 	jouerCoup(etat, coup);
 	coup = nouveauCoup(0);
 	jouerCoup(etat, coup);

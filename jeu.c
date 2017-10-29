@@ -188,34 +188,34 @@ int coups_egaux(Coup * coup1, Coup * coup2){
 FinDePartie testFin( Etat * etat ) {
     // tester si un joueur a gagné
     int i,j,k,n = 0;
-    for ( i=0;i < LIGNES ; i++) {
+    for (i=0; i < LIGNES; i++) {
         for(j=0; j < COLONNES; j++) {
-            if ( etat->plateau[i][j] != VIDE) {
+            if (etat->plateau[i][j] != VIDE) {
                 n++;	// nb coups joués
 
                 // Vérifie sur la colonne
                 k=0;
-                while ( k < 4 && i+k < COLONNES && etat->plateau[i+k][j] == etat->plateau[i][j] )
+                while ( k < 4 && i+k < LIGNES && etat->plateau[i+k][j] == etat->plateau[i][j] )
 					k++;
                 if ( k == 4 )
 					return etat->plateau[i][j] == PION_ORDI ? ORDI_GAGNE : HUMAIN_GAGNE;
 
                 // Vérifie sur la ligne
                 k=0;
-                while ( k < 4 && j+k < LIGNES && etat->plateau[i][j+k] == etat->plateau[i][j] )
+                while ( k < 4 && j+k < COLONNES && etat->plateau[i][j+k] == etat->plateau[i][j] )
                     k++;
                 if ( k == 4 )
                     return etat->plateau[i][j] == PION_ORDI ? ORDI_GAGNE : HUMAIN_GAGNE;
 
                 // diagonales
                 k=0;
-                while ( k < 4 && i+k < COLONNES && j+k < LIGNES && etat->plateau[i+k][j+k] == etat->plateau[i][j] )
+                while ( k < 4 && i+k < LIGNES && j+k < COLONNES && etat->plateau[i+k][j+k] == etat->plateau[i][j] )
                     k++;
                 if ( k == 4 )
                     return etat->plateau[i][j] == PION_ORDI ? ORDI_GAGNE : HUMAIN_GAGNE;
 
                 k=0;
-                while ( k < 4 && i+k < COLONNES && j-k >= 0 && etat->plateau[i+k][j-k] == etat->plateau[i][j] )
+                while ( k < 4 && i+k < LIGNES && j-k >= 0 && etat->plateau[i+k][j-k] == etat->plateau[i][j] )
                     k++;
                 if ( k == 4 )
                     return etat->plateau[i][j] == PION_ORDI ? ORDI_GAGNE : HUMAIN_GAGNE;

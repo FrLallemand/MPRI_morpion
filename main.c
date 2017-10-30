@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
             else {
                 // tour de l'Ordinateur
 
-                ordijoue_mcts( etat, TEMPS, MAX);
+                ordijoue_mcts(etat, TEMPS, MAX);
 
             }
 
@@ -102,6 +102,9 @@ int main(int argc, char *argv[]) {
             printf(" Match nul !  \n");
         else
             printf( "** BRAVO, l'ordinateur a perdu  **\n");
+
+        free(coup);
+        free(etat);
         return 0;
     }
     else if (strcmp("test", argv[1]) == 0){

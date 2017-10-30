@@ -1,6 +1,6 @@
 CC=gcc
 LIBS = -lm
-FLAGS = -O3
+FLAGS = -O3 -g
 OBJECTS = jeu.o mcts.o main.o
 HEADERS = jeu.h mcts.h
 EXEC = main

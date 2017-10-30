@@ -54,6 +54,7 @@ void freeNoeud ( Noeud * noeud) {
         freeNoeud(noeud->enfants[noeud->nb_enfants-1]);
         noeud->nb_enfants --;
     }
+
     if ( noeud->coup != NULL)
         free(noeud->coup);
 
@@ -107,7 +108,9 @@ Noeud * developperFils(Noeud * noeud){
 	// On récupère la liste des coups possibles
 	Coup ** coups = coups_possibles(noeud->etat);
 	// On filtre les coups déjàs développés
+
 	//TODO n'utiliser qu'un seul tableau en décalant les indices, ou autre amélioration
+
 	/*
 	  Après plusieurs méthodes testées (refaire un lancer au hasard si le choix est déjà developpé,
 	  stocker les méthodes disponibles dans un tableau secondaire)
@@ -117,7 +120,7 @@ Noeud * developperFils(Noeud * noeud){
 	coupsDispos = 0;
 	while(coups[coupsDispos] != NULL){
 		dejaDev = 0;
-		for(int i=0; i<noeud->nb_enfants; i++){
+		for(int i=0; i < noeud->nb_enfants; i++){
 			if(coups_egaux(coups[coupsDispos], noeud->enfants[i]->coup)){
 				dejaDev = 1;
 				break;
@@ -127,9 +130,10 @@ Noeud * developperFils(Noeud * noeud){
 		if(!dejaDev){
 			coupsDispos++;
 		}
+
 		else {
 			int k = coupsDispos;
-			k = coupsDispos;
+
 			while(coups[k] != NULL){
 				coups[k] = coups[k+1];
 				k++;
@@ -165,6 +169,13 @@ FinDePartie simulerFinPartie(Etat * etat){
 	}
 	Coup ** coups = coups_possibles(etat);
 	jouerCoup(etat, coups[rand() % nb_coups_possibles(etat)]);
+
+	int k = 0;
+
+	while(coups[k] != NULL){
+		free(coups[k]);
+		k++;
+	}
 
 	free(coups);
 
@@ -278,6 +289,7 @@ void ordijoue_mcts(Etat * etat, int tempsmax, Regle regle) {
 
 	noeudMeilleurCoup = choisirMeilleurCoup(racine, regle);
 	meilleur_coup = noeudMeilleurCoup->coup;
+
 	/* fin de l'algorithme  */
 
 	printf("\n");
@@ -295,5 +307,5 @@ void ordijoue_mcts(Etat * etat, int tempsmax, Regle regle) {
 
 	// Penser à libérer la mémoire :
 	freeNoeud(racine);
-	free (coups);
+	free(coups);
 }

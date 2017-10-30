@@ -82,6 +82,7 @@ int main(int argc, char *argv[]) {
                     coup = demanderCoup();
                 } while ( !jouerCoup(etat, coup) );
 
+                free(coup);
             }
             else {
                 // tour de l'Ordinateur
@@ -103,7 +104,6 @@ int main(int argc, char *argv[]) {
         else
             printf( "** BRAVO, l'ordinateur a perdu  **\n");
 
-        free(coup);
         free(etat);
         return 0;
     }

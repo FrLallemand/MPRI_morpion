@@ -134,6 +134,7 @@ Noeud * developperFils(Noeud * noeud){
 		else {
 			int k = coupsDispos;
 
+			free(coups[k]);
 			while(coups[k] != NULL){
 				coups[k] = coups[k+1];
 				k++;

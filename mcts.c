@@ -158,6 +158,8 @@ Noeud * developperFils(Noeud * noeud){
 		coupsDispos++;
 	}
 
+	free(coups);
+
 	return enfant;
 }
 
@@ -285,6 +287,7 @@ void ordijoue_mcts(Etat * etat, int tempsmax, Regle regle) {
 		toc = clock();
 		temps = (int)( ((double) (toc - tic)) / CLOCKS_PER_SEC );
 		iter ++;
+
 	} while ( temps < tempsmax );
 
 	noeudMeilleurCoup = choisirMeilleurCoup(racine, regle);

@@ -10,7 +10,7 @@
 //Approximation de la valeur de √2
 #define C 1,4142
 
-#define TEMPS 2 	// temps de calcul pour un coup avec MCTS (en secondes)
+#define TEMPS 8 	// temps de calcul pour un coup avec MCTS (en secondes)
 
 
 

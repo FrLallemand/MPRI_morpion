@@ -8,7 +8,7 @@
 #define RECOMPENSE_HUMAIN_VAINQUEUR 0
 #define RECOMPENSE_MATCH_NUL 0.5
 //Approximation de la valeur de √2
-#define C 1,4142
+#define C sqrt(2)
 
 #define TEMPS 8 	// temps de calcul pour un coup avec MCTS (en secondes)
 
@@ -33,7 +33,7 @@ typedef struct NoeudSt {
     // POUR MCTS:
     int nb_victoires;
     int nb_simus;
-    int somme_recompense;
+    double somme_recompense;
 } Noeud;
 
 // Créer un nouveau noeud en jouant un coup à partir d'un parent

@@ -245,10 +245,10 @@ Noeud * choisirMeilleurCoup(Noeud * racine, Regle regle){
 	switch(regle){
 	case MAX:
 		// on choisit le noeud qui maximise la récompense
-		maxRecompense = racine->enfants[indiceMeilleurCoup]->nb_simus == 0 ?  0:(double)racine->enfants[indiceMeilleurCoup]->somme_recompense / racine->nb_simus;
+		maxRecompense = racine->enfants[indiceMeilleurCoup]->nb_simus == 0 ?  0:(double)racine->enfants[indiceMeilleurCoup]->somme_recompense / racine->enfants[indiceMeilleurCoup]->nb_simus;
 		double tmpRecompense = 0;
 		for(int i=1; i<racine->nb_enfants; i++){
-			tmpRecompense = racine->enfants[i]->nb_simus == 0 ?  0:(double)racine->somme_recompense / racine->enfants[i]->nb_simus;
+			tmpRecompense = racine->enfants[i]->nb_simus == 0 ?  0:(double)racine->enfants[indiceMeilleurCoup]->somme_recompense / racine->enfants[i]->nb_simus;
 			if(tmpRecompense > maxRecompense){
 				maxRecompense = tmpRecompense;
 				indiceMeilleurCoup = i;

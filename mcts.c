@@ -171,6 +171,37 @@ FinDePartie simulerFinPartie(Etat * etat){
 		return resultat;
 	}
 	Coup ** coups = coups_possibles(etat);
+
+	int j = 0;
+	FinDePartie resultat_final;
+	bool final_trouve = false;
+
+	// On vérifie si il n'y a pas un coup qui permet de terminer la partie
+	while(coups[j] != NULL){
+		Etat * copie_etat = copieEtat(etat);
+		jouerCoup(copie_etat, coups[j]);
+		FinDePartie resultat = testFin(copie_etat);
+
+		// On préfère éviter un coup qui permet à l'humain de gagner que de favoriser un coup qui rapproche l'ordinateur de la victoire
+		if(resultat == HUMAIN_GAGNE && copie_etat->joueur == 1){
+			resultat_final = resultat;
+			final_trouve = true;
+			break;
+		}
+		if(resultat == ORDI_GAGNE && copie_etat->joueur == 0){
+			resultat_final = resultat;
+			final_trouve = true;
+		}
+
+		free(copie_etat);
+		j++;
+	}
+
+	// Si on a trouvé un coup qui permet de terminer la partie, on renvoie l'état de la partie après ce coup
+	if(final_trouve){
+		return resultat_final;
+	}
+
 	jouerCoup(etat, coups[rand() % nb_coups_possibles(etat)]);
 
 	int k = 0;

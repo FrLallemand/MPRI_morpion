@@ -10,7 +10,7 @@
 //Approximation de la valeur de √2
 #define C sqrt(2)
 
-#define TEMPS 8 	// temps de calcul pour un coup avec MCTS (en secondes)
+#define TEMPS  20	// temps de calcul pour un coup avec MCTS (en secondes)
 
 
 

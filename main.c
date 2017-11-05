@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
             else {
                 // tour de l'Ordinateur
 
-                ordijoue_mcts(etat, TEMPS, MAX);
+                ordijoue_mcts(etat, TEMPS, ROBUSTE);
 
             }
 

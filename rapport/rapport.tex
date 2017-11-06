@@ -1,5 +1,5 @@
 \documentclass[a4paper, 11pt]{article}
-\usepackage[utf8]{inputenc} 
+\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{graphicx}
@@ -14,7 +14,7 @@
 
 Lorsque l'humain commence à chaque fois, nous avons observons 5 défaites consécutives de l'humain à partir d'un temps égal à 4.
 
-Lorsque on laisse l'ordinateur commencer, nous observons 5 défaites consécutives de l'humain au premier pas de temps, soit 1. 
+Lorsque on laisse l'ordinateur commencer, nous observons 5 défaites consécutives de l'humain au premier pas de temps, soit 1.
 
 Remarque de l'humain utilisé pour cette expérience: je suis mauvais au puissance 4.\\
 
@@ -24,13 +24,13 @@ Lorsque l'humain commence, nous observons 5 défaites consécutives de l'humain 
 
 Lorsque l'ordinateur commence, nous observons 5 défaites consécutives de l'humain alors que l'ordinateur n'a qu'une seconde pour faire ses simulations.
 
-On peut on conclure que l'amélioration a rendu notre algorithme plus efficace pour jouer au puissance 4. Cela s'explique d'une part par le fait que l'algorithme va éviter les coups superflus pour arriver à une situation où il peut gagner en un coup. De plus, cela va désavantager les coups qui permettent à l'adversaire d'être à un coup de gagner le jeu.\\
+On peut en conclure que l'amélioration a rendu notre algorithme plus efficace pour jouer au puissance 4. Cela s'explique d'une part par le fait que l'algorithme va éviter les coups superflus pour arriver à une situation où il peut gagner en un coup. De plus, cela va désavantager les coups qui permettent à l'adversaire d'être à un coup de gagner le jeu.\\
 
-\textbf{Question 4 : } La documentation de gcc indique que l'option -O3 inclue toutes les optimisations possibles dans l'exécutable final, afin de rendre son exécution plus rapide. Dans le cas de notre programme, sa vitesse d'exécution influe directement sur l'efficacité du programme, puisqu'elle permet à l'algorithme de faire plus de simulations et donc de mieux jouer. 
+\textbf{Question 4 : } La documentation de gcc indique que l'option -O3 inclu toutes les optimisations possibles dans l'exécutable final, afin de rendre son exécution plus rapide. Dans le cas de notre programme, sa vitesse d'exécution influe directement sur l'efficacité du programme, puisqu'elle permet à l'algorithme de faire plus de simulations et donc de mieux jouer.
 
 Par exemple, l'option -O3 applique les options reorder-blocks et reorder-functions de gcc, qui permettent si c'est intéressant de réordonner des blocs pour éviter certains calculs.\\
 
-\textbf{Question 5 : } Les options semblent donner des coups assez différents lorsque beaucoup de coups ont été joués et leurs décisions semblent convergé lorsque la partie progresse. Cela s'explique par le nombre de coups possibles et intéressants pour l'ordinateur qui diminue au fur et à mesure de la partie. Il semblerait que c'est la stratégie max qui donne les meilleurs résultats. Par exemple, si on a placé trois jetons dans la colonne 0, la stratégie max pose un jeton dans la colonne 0 pour nous empêcher de gagner, ce que ne fait pas la stratégie robuste.\\
+\textbf{Question 5 : } Les options semblent donner des coups assez différents lorsque beaucoup de coups ont été joués et leurs décisions semblent converger lorsque la partie progresse. Cela s'explique par le nombre de coups possibles et intéressants pour l'ordinateur qui diminue au fur et à mesure de la partie. Il semblerait que c'est la stratégie max qui donne les meilleurs résultats. Par exemple, si on a placé trois jetons dans la colonne 0, la stratégie max pose un jeton dans la colonne 0 pour nous empêcher de gagner, ce que ne fait pas la stratégie robuste.\\
 
 
 \textbf{Question 6 : } Pour estimer la complexité en temps de l'algorithme Minimax pour jouer le premier coup. Il faut donner une estimation du facteur de branchement moyen $b$ et de la profondeur moyenne d'une branche $n$.
@@ -39,6 +39,6 @@ Dans le pire des cas, on aura à chaque niveau de l'arbre à choisir entre 7 cou
 
 Pour qu'une partie se termine, il faut qu'entre 7 coups(trois pour celui qui perd, et quatre pour celui qui gagne) et 42 coups (il n'y a plus de coups possibles) pour que la partie se termine, et il n'y a a priori pas de nombre de coups particulier qui facilite la victoire. On peut donc estimer que la longueur moyenne d'une branche est à mi-chemin entre 7 et 42, soit approximativement 25.
 
-La complexité en temps peut donc être estimée à $7^{25}$, ce qui est de l'ordre de $10^{21}$. Cette complexité étant très importante, on peut en conclure que l'algorithme Minimax, si il est plus précis que l'algorithme MCTS que nous avons utilisé au cours de ce projet, n'est pas utilisable dans notre cas. 
+La complexité en temps peut donc être estimée à $7^{25}$, ce qui est de l'ordre de $10^{21}$. Cette complexité étant très importante, on peut en conclure que l'algorithme Minimax, si il est plus précis que l'algorithme MCTS que nous avons utilisé au cours de ce projet, n'est pas utilisable dans notre cas.
 
 \end{document}

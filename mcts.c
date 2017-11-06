@@ -322,7 +322,7 @@ void ordijoue_mcts(Etat * etat, int tempsmax, Regle regle) {
 
 	} while ( temps < tempsmax );
 
-	noeudMeilleurCoup = choisirMeilleurCoup(racine, regle);
+	noeudMeilleurCoup = choisirMeilleurCoup(racine, ROBUSTE);
 	meilleur_coup = noeudMeilleurCoup->coup;
 
 	/* fin de l'algorithme  */
